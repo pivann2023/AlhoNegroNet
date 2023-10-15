@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Estufas - Apagar</h2>
+      </div>
+    </div>    <div class="row">
+      <div class="cols">
+        <form method="post">{% csrf_token %}
+          Tem certeza que quer apagar "{{ object }}" ?
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<html><body>
+{% autoescape off %}
+<h1>Olá {{ user.username }}, Seja muito benvindo(a)!
+</h1>
+<p>Você está recebendo este e-mail porque fez o cadastro no site Alho Negro Network.
+</p>
+<p>Por favor clique no botão abaixo para confirmar sua inscrição:
+</p>
+<button style="color:black;padding: 10px 10px 10px 10px;font-weight: bold;font-size:14pt;background-color: lightseagreen;border-radius: 10px;border-color: black;align-content: center;"><a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">&nbsp;&nbsp;&nbsp;&nbsp;Confirmar Incrição&nbsp;&nbsp;&nbsp;&nbsp;</a></button>
+
+<p>Desejamos ótimas experiências na produção, compra ou venda de Alho Negro através do nosso site. 
+  Você faz parte dessa comunidade!!!!
+</p>
+{% endautoescape %}
+</body></html>

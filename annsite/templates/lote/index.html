@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Lotes de Produção</h2>
+      </div>
+    </div>
+    <div class="row">
+        <div class="cols">
+          <table id="tbLote" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+            <thead>
+                <th scope="col">Estufa</th>
+                <th scope="col">Peso Inicial</th>
+                <th>Peso Final</th>
+                <th>Data de início</th>
+                <th scope="col">Data Final</th>
+                <th>Temperatura</th>
+                <th>Situação</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </thead>
+            <tbody>
+                {% for lote in lotes %}
+                <tr>
+                    <td>{{ lote.estufa }}</td>
+                    <td>{{ lote.peso_inicial }}</td>
+                    <td>{{ lote.peso_final }}</td>
+                    <td>{{ lote.data_inicio }}</td>
+                    <td>{{ lote.data_final }}</td>
+                    <td>{{ lote.temperatura }}</td>
+                    <td>{{ lote.situacao }}</td>
+                    <td>{{ lote.valor }}</td>
+                    <td>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Edit">
+                        <a class="btn" href="{% url 'lote_edit' pk=lote.id %}">  
+                          <i class="bi bi-pencil-square"></i>
+                        </a>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Delete">
+                        <a class="btn" href="{% url 'lote_delete' pk=lote.id %}">    
+                          <i class="bi bi-trash3"></i>
+                        </a>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Gerar Certificado">
+                        <i class="bi bi-graph-up"></i>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Ver Dados IoT">
+                        <a class="btn" href="{% url 'lote_iot_list' pk=lote.id %}">   
+                          <i class="bi bi-table"></i>
+                        </a>
+                      </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+          </table>
+          <script lang="javascript">
+            $(document).ready( function () {
+                var table = $('#tbLote').DataTable( {
+                    language: {
+                    url: 'https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json'
+                    },
+                    responsive : true
+                } )
+                .columns.adjust()
+                .responsive.recalc();
+            } );
+          </script>
+
+        </div>
+      </div>
+  {% endblock %}

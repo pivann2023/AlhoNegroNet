@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Estufas</h2>
+        <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Nova Estufa">
+            <a class="btn" href="{% url 'estufa_new' %}">                        
+              <i class="bi bi-plus-square"></i>
+            </a>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+        <div class="cols">
+          <table id="tbEstufa" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+            <thead>
+                <th scope="col">Nome do IOT</th>
+                <th scope="col">Senha do IOT</th>
+                <th>Capacidade</th>
+                <th>user</th>
+                <th scope="col">Situação</th>
+                <th>Data da Criação</th>
+                <th>Data última Modificação</th>
+                <th>Açoes</th>
+            </thead>
+            <tbody>
+                {% for estufa in estufas %}
+                <tr>
+                    <td>{{ estufa.nomeIOT }}</td>
+                    <td>{{ estufa.senhaIOT }}</td>
+                    <td>{{ estufa.capacidade }}</td>
+                    <td>{{ estufa.user }}</td>
+                    <td>{{ estufa.status }}</td>
+                    <td>{{ estufa.created_at }}</td>
+                    <td>{{ estufa.modified_at }}</td>
+                    <td>
+                        <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Edit">
+                          <a class="btn" href="{% url 'estufa_edit' pk=estufa.id %}">                        
+                            <i class="bi bi-pencil-square"></i>
+                          </a>
+                        </button>
+                        <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <a class="btn" href="{% url 'estufa_delete' pk=estufa.id %}">                        
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </button>
+                        <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Adicionar Lote">
+                            <a class="btn" href="{% url 'lote_new' fk=estufa.id%}">                        
+                                <i class="bi bi-node-plus"></i>
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+          </table>
+          <script lang="javascript">
+            $(document).ready( function () {
+                var table = $('#tbEstufa').DataTable( {
+                    language: {
+                    url: 'https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json'
+                    },
+                    responsive : true
+                } )
+                .columns.adjust()
+                .responsive.recalc();
+            } );
+          </script>
+
+        </div>
+      </div>
+  {% endblock %}

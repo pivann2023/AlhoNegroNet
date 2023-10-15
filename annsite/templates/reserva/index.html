@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Reservas</h2>
+      </div>
+    </div>
+    <div class="row">
+        <div class="cols">
+          <table id="tbLote" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+            <thead>
+                <th scope="col">Estufa</th>
+                <th scope="col">Peso Inicial</th>
+                <th>Peso Final</th>
+                <th>Data de início</th>
+                <th scope="col">Data Final</th>
+                <th>Temperatura</th>
+                <th>Situação</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>{{ reserva.estufa }}</td>
+                    <td>{{ reserva.peso_inicial }}</td>
+                    <td>{{ reserva.peso_final }}</td>
+                    <td>{{ reserva.data_inicio }}</td>
+                    <td>{{ reserva.data_final }}</td>
+                    <td>{{ reserva.temperatura }}</td>
+                    <td>{{ reserva.situacao }}</td>
+                    <td>{{ reserva.valor }}</td>
+                    <td>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Edit">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Delete">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Gerar Certificado">
+                        <i class="bi bi-graph-up"></i>
+                      </button>
+                      <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Ver Dados IoT">
+                        <i class="bi bi-table"></i>
+                      </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+          </table>
+          <script lang="javascript">
+            $(document).ready( function () {
+                var table = $('#tbLote').DataTable( {
+                    language: {
+                    url: 'https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json'
+                    },
+                    responsive : true
+                } )
+                .columns.adjust()
+                .responsive.recalc();
+            } );
+          </script>
+
+        </div>
+      </div>
+  {% endblock %}

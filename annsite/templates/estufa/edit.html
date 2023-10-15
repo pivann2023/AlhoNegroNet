@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Estufas - Editar</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input class="btn btn-outline-primary" type="submit" value="Enviar" />
+        </form>
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Lotes de Produção - Dados de IoT - Lote {{ lote_id }}</h2>
+      </div>
+    </div>
+    <div class="row">
+        <div class="cols">
+          <table id="tbIOT" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+            <thead>
+                <th scope="col">Versão do Hardware</th>
+                <th scope="col">Versão do Software>
+                <th>Set Point</th>
+                <th>Temperatura &deg;C</th>
+                <th>Umidade (%)</th>
+                <th>Data e Hora</th>
+                <th>Serial Number Interno</th>
+            </thead>
+            <tbody>
+                {% for IOT in IOTs %}
+                <tr>
+                    <td>{{ IOT.hw_vers }}</td>
+                    <td>{{ IOT.sw_vers }}</td>
+                    <td>{{ IOT.set_point }}</td>
+                    <td>{{ IOT.temperatura }}</td>
+                    <td>{{ IOT.humidade }}</td>
+                    <td>{{ IOT.data_hora }}</td>
+                    <td>{{ IOT.serialNumber }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+          </table>
+          <script lang="javascript">
+            $(document).ready( function () {
+                var table = $('#tbIOT').DataTable( {
+                    language: {
+                    url: 'https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json'
+                    },
+                    responsive : true
+                } )
+                .columns.adjust()
+                .responsive.recalc();
+            } );
+          </script>
+
+        </div>
+      </div>
+  {% endblock %}
