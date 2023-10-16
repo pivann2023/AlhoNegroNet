@@ -21,6 +21,7 @@ from pandas import DataFrame
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.dates as mdates
 from pprint import pprint
 from datetime import datetime
 from datetime import date
@@ -207,6 +208,7 @@ def lote_iot_certificado(request,pk=0):
     plt.title('Certificado de produção do Lote - '+str(pk))
     fig.text(0.3,0.03,"Gerado por "+request.user.username+" em "+datetime.now().strftime("%d/%m/%Y %H:%M:%S"),size=12)
     ax.set_xlabel('Horários coletados',size=14)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%y'))
     buf = io.BytesIO()
     fig.savefig(buf,format='png')
     buf.seek(0)
