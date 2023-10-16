@@ -20,4 +20,5 @@ class EstufaForm(forms.ModelForm):
 class LoteForm(forms.ModelForm):
     class Meta:
          model = lote
-         exclude = ['estufa']
+         fields= ['peso_inicial', 'peso_final', 'data_inicio', 'data_final', 'temperatura', 'situacao', 'valor', 'estufa']
+         widgets = {'estufa': forms.HiddenInput()}

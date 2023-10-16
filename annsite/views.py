@@ -104,47 +104,6 @@ def logout(request):
   return render(request,'home.html')
 
 @login_required
-def getLoteCertificate(request):
-    graphData = dadosIOT.objects.filter(lote=1,order_by='data_hora')
-    pprint(graphData)
-    df = DataFrame(graphData, columns=['temperatura', 'umidade'])
-
-    fig, ax = plt.subplots()
-    ax3 = ax.twinx()
-    rspine = ax3.spines['right']
-    rspine.set_position(('axes', 1.15))
-    ax3.set_frame_on(True)
-    ax3.patch.set_visible(False)
-    fig.subplots_adjust(right=0.7)
-
-    df.A.plot(ax=ax, style='b-')
-    # same ax as above since it's automatically added on the right
-    df.B.plot(ax=ax, style='r-', secondary_y=True)
-    df.C.plot(ax=ax3, style='g-')
-
-    # add legend --> take advantage of pandas providing us access
-    # to the line associated with the right part of the axis
-    ax3.legend([ax.get_lines()[0], ax.right_ax.get_lines()[0], ax3.get_lines()[0]],\
-            ['A','B','C'], bbox_to_anchor=(1.5, 0.5))
-    
-
-    df = pd.DataFrame.from_dict(
-        graphData, orient='index', columns =[
-        'temperatura', 'umidade'])
-
-    fig, ax =plt.subplots(figsize=(8.26,11.7))
-    plt.title("Lista de compras Mercado Solidário")
-    ax.axis('tight')
-    ax.axis('off')
-    the_table = ax.table(cellText=df.values,colLabels=df.columns,loc='center')
-    fig.text(0.3,0.03,"Gerado por "+request.user.username+" em "+datetime.now().strftime("%d/%m/%Y %H:%M:%S"),size=12)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pp = PdfPages(BASE_DIR+"/lista-de-compras-mercado-solidario.pdf")
-    pp.savefig(fig, bbox_inches='tight')
-    pp.close()
-
-
-@login_required
 def estufa_list(request):
     estufas = estufa.objects.all().filter(user=request.user)
     return render(request,"estufa/index.html",{'estufas':estufas})
@@ -153,7 +112,6 @@ def estufa_list(request):
 def estufa_view(request, pk):
     estufas = get_object_or_404(estufa, pk=pk)    
     return render(request, "estufa/view.html", {'object':estufas})
-
 
 @login_required
 def estufa_create(request, template_name='estufa/edit.html'):
@@ -196,14 +154,16 @@ def lote_view(request, pk):
     lotes = get_object_or_404(lote, pk=pk)    
     return render(request, "lote/view.html", {'object':lotes})
 
-
 @login_required
-def lote_create(request, template_name='lote/edit.html'):
+def lote_create(request, fk=0, template_name='lote/edit.html'):
+    pprint(request.POST)
     form = LoteForm(request.POST or None)
+    pprint(form.data)
     if form.is_valid():
+        pprint(form.cleaned_data)
         form.save()
         return redirect('lote_list')
-    return render(request, template_name, {'form':form})
+    return render(request, template_name, {'form':form, 'estufa_id':fk})
 
 @login_required
 def lote_update(request, pk, template_name='lote/edit.html'):
@@ -212,7 +172,7 @@ def lote_update(request, pk, template_name='lote/edit.html'):
     if form.is_valid():
         form.save()
         return redirect('lote_list')
-    return render(request, template_name, {'form':form})
+    return render(request, template_name, {'form':form,'estufa_id':lotes.estufa.id})
 
 @login_required
 def lote_delete(request, pk, template_name='lote/delete.html'):
@@ -230,6 +190,47 @@ def lote_delete(request, pk, template_name='lote/delete.html'):
 def lote_iot_list(request, pk):
     iots = dadosIOT.objects.all().filter(lote_id=pk).order_by('data_hora')
     return render(request,"lote/iot.html",{'IOTs':iots,'lote_id':pk})
+
+@login_required
+def lote_iot_certificado(request):
+    graphData = dadosIOT.objects.filter(lote=1,order_by='data_hora')
+    pprint(graphData)
+    df = DataFrame(graphData, columns=['temperatura', 'umidade'])
+
+    fig, ax = plt.subplots()
+    ax3 = ax.twinx()
+    rspine = ax3.spines['right']
+    rspine.set_position(('axes', 1.15))
+    ax3.set_frame_on(True)
+    ax3.patch.set_visible(False)
+    fig.subplots_adjust(right=0.7)
+
+    df.A.plot(ax=ax, style='b-')
+    # same ax as above since it's automatically added on the right
+    df.B.plot(ax=ax, style='r-', secondary_y=True)
+    df.C.plot(ax=ax3, style='g-')
+
+    # add legend --> take advantage of pandas providing us access
+    # to the line associated with the right part of the axis
+    ax3.legend([ax.get_lines()[0], ax.right_ax.get_lines()[0], ax3.get_lines()[0]],\
+            ['A','B','C'], bbox_to_anchor=(1.5, 0.5))
+    
+
+    df = pd.DataFrame.from_dict(
+        graphData, orient='index', columns =[
+        'temperatura', 'umidade'])
+
+    fig, ax =plt.subplots(figsize=(8.26,11.7))
+    plt.title("Lista de compras Mercado Solidário")
+    ax.axis('tight')
+    ax.axis('off')
+    the_table = ax.table(cellText=df.values,colLabels=df.columns,loc='center')
+    fig.text(0.3,0.03,"Gerado por "+request.user.username+" em "+datetime.now().strftime("%d/%m/%Y %H:%M:%S"),size=12)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pp = PdfPages(BASE_DIR+"/lista-de-compras-mercado-solidario.pdf")
+    pp.savefig(fig, bbox_inches='tight')
+    pp.close()
+
 
 
 @login_required
