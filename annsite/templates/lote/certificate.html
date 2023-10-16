@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+      <div class="cols">
+        <h2>Lotes de Produção - Certificado - Lote {{ lote_id }}</h2>
+      </div>
+    </div>
+    <div class="row">
+        <div class="cols">
+          <img src="data:image/png;base64,{{ data }}" alt="cetificado" height="480px" width="680px">
+        </div>
+      </div>
+  {% endblock %}

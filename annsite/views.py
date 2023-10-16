@@ -31,6 +31,9 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+import io
+import urllib.parse
+import base64
 
 def signup(request):
     if request.method == 'POST':
@@ -192,46 +195,24 @@ def lote_iot_list(request, pk):
     return render(request,"lote/iot.html",{'IOTs':iots,'lote_id':pk})
 
 @login_required
-def lote_iot_certificado(request):
-    graphData = dadosIOT.objects.filter(lote=1,order_by='data_hora')
-    pprint(graphData)
-    df = DataFrame(graphData, columns=['temperatura', 'umidade'])
+def lote_iot_certificado(request,pk=0):
+    df = pd.DataFrame(dadosIOT.objects.all().filter(lote_id=pk).values('data_hora','temperatura','set_point','humidade'))
+    fig, ax = plt.subplots(figsize=(18,12.7))
 
-    fig, ax = plt.subplots()
-    ax3 = ax.twinx()
-    rspine = ax3.spines['right']
-    rspine.set_position(('axes', 1.15))
-    ax3.set_frame_on(True)
-    ax3.patch.set_visible(False)
-    fig.subplots_adjust(right=0.7)
-
-    df.A.plot(ax=ax, style='b-')
-    # same ax as above since it's automatically added on the right
-    df.B.plot(ax=ax, style='r-', secondary_y=True)
-    df.C.plot(ax=ax3, style='g-')
-
-    # add legend --> take advantage of pandas providing us access
-    # to the line associated with the right part of the axis
-    ax3.legend([ax.get_lines()[0], ax.right_ax.get_lines()[0], ax3.get_lines()[0]],\
-            ['A','B','C'], bbox_to_anchor=(1.5, 0.5))
-    
-
-    df = pd.DataFrame.from_dict(
-        graphData, orient='index', columns =[
-        'temperatura', 'umidade'])
-
-    fig, ax =plt.subplots(figsize=(8.26,11.7))
-    plt.title("Lista de compras Mercado Solidário")
-    ax.axis('tight')
-    ax.axis('off')
-    the_table = ax.table(cellText=df.values,colLabels=df.columns,loc='center')
+    df.plot(kind='line',x='data_hora',y='temperatura',ax=ax,label='Temperatura')
+    plt.ylabel('Temperatura',size=14)
+    df.plot(kind='line',x='data_hora',y='set_point',ax=ax,label='Configuração')
+    df.plot(kind='line',x='data_hora',y='humidade',ax=ax, label='Umidade',secondary_y=True)
+    plt.ylabel('Umidade',size=14)
+    plt.title('Certificado de produção do Lote - '+str(pk))
     fig.text(0.3,0.03,"Gerado por "+request.user.username+" em "+datetime.now().strftime("%d/%m/%Y %H:%M:%S"),size=12)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pp = PdfPages(BASE_DIR+"/lista-de-compras-mercado-solidario.pdf")
-    pp.savefig(fig, bbox_inches='tight')
-    pp.close()
-
-
+    ax.set_xlabel('Horários coletados',size=14)
+    buf = io.BytesIO()
+    fig.savefig(buf,format='png')
+    buf.seek(0)
+    imgStr=base64.b64encode(buf.read())
+    uriStr=urllib.parse.quote(imgStr)
+    return render(request,'lote/certificate.html',{'data':uriStr, 'lote_id':pk})
 
 @login_required
 def reserva_list(request):
