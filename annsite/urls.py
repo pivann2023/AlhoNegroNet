@@ -26,6 +26,7 @@ urlpatterns = [
     path('lotes/edit/<int:pk>', lote_update, name='lote_edit'),
     path('lotes/delete/<int:pk>', lote_delete, name='lote_delete'),
     path('lotes/iot/<int:pk>', lote_iot_list, name='lote_iot_list'),
+    path('lotes/iot/certificado/<int:pk>',lote_iot_certificado,name='lote_iot_certificado'),
     path('reservas',reserva_list,name='reserva_list'),
     path('reservas/<int:pk>',reservaView,name='reserva_view')
     
