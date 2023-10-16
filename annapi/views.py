@@ -15,10 +15,10 @@ def save_dadosIOT(request,deviceID):
   dadosEstufa = estufa.objects.all().filter(nomeIOT=deviceID,senhaIOT=senha) # a estufa está cadastrada ?
   #pprint(dadosEstufa.values())
   if (dadosEstufa.count() == 1):
-    dadosLote = lote.objects.all().filter(estufa_id=dadosEstufa.first().id,id=request.data['lote_id']) # lote está cadastrado e com status produzindo ?
+    dadosLote = lote.objects.all().filter(estufa_id=dadosEstufa.first().id,id=request.data['lote_id']) # lote está cadastrado e com status iniciado ?
     #pprint (dadosLote.values())
     if (dadosLote.count() == 1):
-      if (dadosLote.first().situacao == 'produzindo'):
+      if (dadosLote.first().situacao == 'iniciado'):
         #salvar registro
         serializer = dadosIOTSerializer(data=request.data)
         serializer.is_valid()
@@ -28,7 +28,7 @@ def save_dadosIOT(request,deviceID):
         return Response("Dados do Lote " + str(dadosLote.first().id) + " registrados.",status=status.HTTP_201_CREATED)
       else:
         #print('Nao produzindo -->'+dadosLote.first().situacao+'<--')
-        return Response("Lote nao está com status 'produzindo'",status=status.HTTP_412_PRECONDITION_FAILED)
+        return Response("Lote nao está com status 'iniciado'",status=status.HTTP_412_PRECONDITION_FAILED)
     else:
       #print('cadastro zoado')
       return Response("Cadastro do lote com problema",status=status.HTTP_417_EXPECTATION_FAILED)
