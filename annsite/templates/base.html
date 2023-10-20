@@ -92,11 +92,11 @@
             </li>
             {% if user.is_superuser %}
             <li class="nav-item">
-              <a class="nav-link" href="admin">Administração do Site</a>
+              <a class="nav-link" href="{% url 'admin:index' %}">Administração do Site</a>
             </li>
             {% endif %}
             <li class="nav-item">
-              <a class="nav-link" href="ajuda">Ajuda</a>
+              <a class="nav-link" href="{% url 'ajuda' %}">Ajuda</a>
             </li>
           </ul>
           </div>

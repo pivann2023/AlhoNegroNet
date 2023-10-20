@@ -22,7 +22,7 @@ admin.site.index_title = "Alho Negro Network"
 
 urlpatterns = [
     path('', include('annsite.urls')),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls,name='admin'),
     path('api/v1/iot/', include('annapi.urls')),
 ]
 
